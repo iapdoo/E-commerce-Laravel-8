@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
 
         Route::get('edit/{id}', [LanguagesController::class, 'edit'])->name('admin.languages.edit');
         Route::post('update/{id}', [LanguagesController::class, 'update'])->name('admin.languages.update');
+        Route::get('delete/{id}', [LanguagesController::class, 'destroy'])->name('admin.languages.delete');
     });
     ######################### start language route ##############################
 });

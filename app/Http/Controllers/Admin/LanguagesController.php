@@ -54,4 +54,16 @@ class LanguagesController extends Controller
 
 
     }
+    public function destroy($id){
+        try {
+            $language =Language::find($id);
+            if (!$language){
+                return redirect()->route('admin.languages',$id)->with(['error'=>'هذه اللغه غير موجوده ']);
+            }
+            $language->delete();
+            return redirect()->route('admin.languages')->with(['success' => 'تم حذف اللغة بنجاح']);
+        }catch (Exception $ex){
+            return redirect()->route('admin.languages.edit',$id)->with(['error'=>'هذه اللغه عير موجوده ']);
+        }
+    }
 }
