@@ -46,7 +46,11 @@ class LanguagesController extends Controller
             if (!$language){
                 return redirect()->route('admin.languages.edit',$id)->with(['error'=>'هذه اللغه عير موجوده ']);
             }
+            if (!$request->has('active'))
+                $request->request->add(['active'=>0]);
+//            $language['active']=$request->active; // anther way to handel active column but must set it nullable in database
             $language->update($request->except(['_token']));
+
             return redirect()->route('admin.languages')->with(['success' => 'تم تحديث اللغة بنجاح']);
         }catch (Exception $ex){
             return redirect()->route('admin.languages.edit',$id)->with(['error'=>'هذه اللغه عير موجوده ']);
@@ -62,7 +66,7 @@ class LanguagesController extends Controller
             }
             $language->delete();
             return redirect()->route('admin.languages')->with(['success' => 'تم حذف اللغة بنجاح']);
-        }catch (Exception $ex){
+        }catch (\Exception $ex){
             return redirect()->route('admin.languages.edit',$id)->with(['error'=>'هذه اللغه عير موجوده ']);
         }
     }

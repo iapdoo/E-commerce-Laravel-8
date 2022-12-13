@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @method static select()
+ * @method static Active()
  */
 class Language extends Model
 {

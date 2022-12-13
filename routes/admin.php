@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LanguagesController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\MainCategoryController;
 use Illuminate\Support\Facades\Route;
 
 define('PAGINATION_COUNT',10);
@@ -28,7 +29,19 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::post('update/{id}', [LanguagesController::class, 'update'])->name('admin.languages.update');
         Route::get('delete/{id}', [LanguagesController::class, 'destroy'])->name('admin.languages.delete');
     });
-    ######################### start language route ##############################
+    ######################### End language route ##############################
+    ######################### start Main Categories route ##############################
+    Route::group(['prefix' => 'main_categories'], function () {
+        Route::get('/', [MainCategoryController::class, 'index'])->name('admin.maincategories');
+        Route::get('create', [MainCategoryController::class, 'create'])->name('admin.maincategories.create');
+        Route::post('store', [MainCategoryController::class, 'store'])->name('admin.maincategories.store');
+
+        Route::get('edit/{id}', [MainCategoryController::class, 'edit'])->name('admin.maincategories.edit');
+        Route::post('update/{id}', [MainCategoryController::class, 'update'])->name('admin.maincategories.update');
+        Route::get('delete/{id}', [MainCategoryController::class, 'destroy'])->name('admin.maincategories.delete');
+    });
+    ######################### end Main Categories route ##############################
+
 });
 Route::group(['middleware' => 'guest:admin'], function () {
     Route::get('login', [LoginController::class, 'get_login'])->name('get.admin.login');
