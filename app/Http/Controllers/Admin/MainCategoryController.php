@@ -70,7 +70,7 @@ class MainCategoryController extends Controller
 
     public function edit($main_category_id)
     {
-        $mainCategory = MainCategory::Selection()->find($main_category_id);
+        $mainCategory = MainCategory::with('categories')->Selection()->find($main_category_id);
         if (!$mainCategory) {
             return redirect()->route('admin.maincategories')->with(['error' => 'هذا المنتج غير موجود ']);
         }

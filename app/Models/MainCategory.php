@@ -39,4 +39,7 @@ class MainCategory extends Model
         return ($val !== null) ? asset('assets/' . $val) : "";
 
     }
+    public function categories(){
+        return $this ->hasMany(self::class ,'translation_of');
+    }
 }
