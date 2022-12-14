@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MainCategoryRequest;
 use App\Models\MainCategory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class MainCategoryController extends Controller
 {
@@ -136,6 +137,9 @@ class MainCategoryController extends Controller
             if (isset($vendors) && $vendors->count() > 0) {
                 return redirect()->route('admin.maincategories')->with(['error' => 'لا يمكن حذف هذا القسم']);
             }
+            $deleteImage= Str::after($main_category->photo,'images/') ;
+            $deleteImage=base_path('public/images/'.$deleteImage);
+            unlink($deleteImage);
             $main_category->delete();
             return redirect()->route('admin.maincategories')->with(['error' => ' تم حذف القسم بنجاح ']);
         } catch (\Exception $exception) {

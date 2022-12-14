@@ -9,6 +9,7 @@ use App\Models\Vendor;
 use App\Notifications\VendorCreated;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 
 class VendorsController extends Controller
 {
@@ -113,6 +114,9 @@ class VendorsController extends Controller
             if (!$vendor) {
                 return redirect()->route('admin.vendors')->with(['error' => 'هذا المتجر غير موجود ']);
             }
+            $deleteImage= Str::after($vendor->logo,'images/') ;
+            $deleteImage=base_path('public/images/'.$deleteImage);
+            unlink($deleteImage);
             $vendor->delete();
             return redirect()->route('admin.vendors')->with(['success' => ' تم حذف المتجر بنجاح ']);
         } catch (\Exception $exception) {
