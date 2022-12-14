@@ -57,15 +57,13 @@ return [
 
         'maincategories' => [
             'driver' => 'local',
-            'root' => base_path( 'assets/images/maincategories/'),
+            'root' => public_path( 'images/maincategories/'),
         ],
 
-//        'vendors' => [
-//            'driver' => 'local',
-//            'root' => public_path() . '/assets/images/vendors/',
-//            'url' => env('APP_URL') . '/public',
-//            'visibility' => 'public',
-//        ],
+        'vendors' => [
+            'driver' => 'local',
+            'root' => public_path( 'images/vendors/'),
+        ],
 
         's3' => [
             'driver' => 's3',

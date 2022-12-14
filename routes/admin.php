@@ -4,9 +4,10 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LanguagesController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\MainCategoryController;
+use App\Http\Controllers\Admin\VendorsController;
 use Illuminate\Support\Facades\Route;
 
-define('PAGINATION_COUNT',10);
+define('PAGINATION_COUNT', 10);
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,6 +42,18 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('delete/{id}', [MainCategoryController::class, 'destroy'])->name('admin.maincategories.delete');
     });
     ######################### end Main Categories route ##############################
+
+    ######################### start Vendors route ##############################
+    Route::group(['prefix' => 'vendors'], function () {
+        Route::get('/', [VendorsController::class, 'index'])->name('admin.vendors');
+        Route::get('create', [VendorsController::class, 'create'])->name('admin.vendors.create');
+        Route::post('store', [VendorsController::class, 'store'])->name('admin.vendors.store');
+
+        Route::get('edit/{id}', [VendorsController::class, 'edit'])->name('admin.vendors.edit');
+        Route::post('update/{id}', [VendorsController::class, 'update'])->name('admin.vendors.update');
+        Route::get('delete/{id}', [VendorsController::class, 'destroy'])->name('admin.vendors.delete');
+    });
+    ######################### end Vendors route ##############################
 
 });
 Route::group(['middleware' => 'guest:admin'], function () {

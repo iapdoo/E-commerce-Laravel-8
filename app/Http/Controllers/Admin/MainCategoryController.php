@@ -23,47 +23,61 @@ class MainCategoryController extends Controller
 
     public function store(MainCategoryRequest $request)
     {
+
         try {
             $main_categories = collect($request->category);
+
             $filter = $main_categories->filter(function ($value, $key) {
                 return $value['abbr'] == get_default_language();
             });
+
             $default_category = array_values($filter->all()) [0];
-            $filepath = "";
+
+
+            $filePath = "";
             if ($request->has('photo')) {
-                $filepath = UploadImage('maincategories', $request->photo);
+
+                $filePath = uploadImage('maincategories', $request->photo);
             }
+
             DB::beginTransaction();
+
             $default_category_id = MainCategory::insertGetId([
                 'translation_lang' => $default_category['abbr'],
                 'translation_of' => 0,
                 'name' => $default_category['name'],
                 'slug' => $default_category['name'],
-                'photo' => $filepath,
+                'photo' => $filePath
             ]);
 
             $categories = $main_categories->filter(function ($value, $key) {
                 return $value['abbr'] != get_default_language();
             });
+
+
             if (isset($categories) && $categories->count()) {
-                $categories_array = [];
+
+                $categories_arr = [];
                 foreach ($categories as $category) {
-                    $categories_array = [
+                    $categories_arr[] = [
                         'translation_lang' => $category['abbr'],
                         'translation_of' => $default_category_id,
                         'name' => $category['name'],
                         'slug' => $category['name'],
-                        'photo' => $filepath,
+                        'photo' => $filePath
                     ];
                 }
-                MainCategory::insert($categories_array);
-            }
-            DB::commit();
-            return redirect()->route('admin.maincategories')->with(['success' => 'تم الحفظ بنجاح ']);
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            return redirect()->route('admin.maincategories')->with(['error' => 'حدث خطا ما برجاء المحاوله لاحقا']);
 
+                MainCategory::insert($categories_arr);
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.maincategories')->with(['success' => 'تم الحفظ بنجاح']);
+
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return redirect()->route('admin.maincategories')->with(['error' => 'حدث خطا ما برجاء المحاوله لاحقا']);
         }
 
     }
@@ -101,7 +115,7 @@ class MainCategoryController extends Controller
             if ($request->has('photo')) {
                 $filepath = UploadImage('maincategories', $request->photo);
                 MainCategory::where('id', $main_category_id)->update([
-                    'photo'=> $filepath
+                    'photo' => $filepath
                 ]);
             }
             return redirect()->route('admin.maincategories')->with(['success' => 'تم التحديث بنجاح ']);
@@ -109,5 +123,23 @@ class MainCategoryController extends Controller
             return redirect()->route('admin.maincategories')->with(['error' => 'حدث خطا ما برجاء المحاوله لاحقا']);
         }
 
+    }
+
+    public function destroy($main_category_id)
+    {
+        try {
+            $main_category = MainCategory::find($main_category_id);
+            if (!$main_category) {
+                return redirect()->route('admin.maincategories')->with(['error' => 'هذا المنتج غير موجود ']);
+            }
+            $vendors = $main_category->vendors();
+            if (isset($vendors) && $vendors->count() > 0) {
+                return redirect()->route('admin.maincategories')->with(['error' => 'لا يمكن حذف هذا القسم']);
+            }
+            $main_category->delete();
+            return redirect()->route('admin.maincategories')->with(['error' => ' تم حذف القسم بنجاح ']);
+        } catch (\Exception $exception) {
+            return redirect()->route('admin.maincategories')->with(['error' => 'حدث خطا ما برجاء المحاوله لاحقا']);
+        }
     }
 }

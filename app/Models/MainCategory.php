@@ -36,10 +36,13 @@ class MainCategory extends Model
     }
     public function getPhotoAttribute($val)
     {
-        return ($val !== null) ? asset('assets/' . $val) : "";
+        return ($val !== null) ? asset($val) : "";
 
     }
     public function categories(){
         return $this ->hasMany(self::class ,'translation_of');
+    }
+    public function vendors(){
+        return $this->hasMany('App\Models\Vendor','category_id','id');
     }
 }
