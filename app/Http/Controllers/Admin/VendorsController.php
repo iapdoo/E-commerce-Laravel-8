@@ -49,6 +49,8 @@ class VendorsController extends Controller
                 'address' => $request->address,
                 'logo' => $filepath,
                 'password' =>$request->password ,
+                'latitude' =>$request->latitude ,
+                'longitude' =>$request->longitude ,
             ]);
             Notification::send($vendor,new VendorCreated($vendor));
 
@@ -121,6 +123,21 @@ class VendorsController extends Controller
             return redirect()->route('admin.vendors')->with(['success' => ' تم حذف المتجر بنجاح ']);
         } catch (\Exception $exception) {
             return $exception;
+            return redirect()->route('admin.vendors')->with(['error' => 'حدث خطا ما برجاء المحاوله لاحقا']);
+        }
+    }
+    public function changeStatus($main_vendor_id)
+    {
+        try {
+            $vendor = Vendor::find($main_vendor_id);
+            if (!$vendor) {
+                return redirect()->route('admin.vendors')->with(['error' => 'هذا المنتج غير موجود ']);
+            }
+            $status = $vendor->active == 0 ? 1 : 0;
+            $vendor->update(['active'=>$status]);
+            return redirect()->route('admin.vendors')->with(['success' => 'تم التحديث بنجاح']);
+
+        } catch (\Exception $exception) {
             return redirect()->route('admin.vendors')->with(['error' => 'حدث خطا ما برجاء المحاوله لاحقا']);
         }
     }

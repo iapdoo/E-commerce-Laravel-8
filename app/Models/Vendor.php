@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Vendor extends Model
 {
-    use HasFactory,Notifiable;
+    use HasFactory, Notifiable;
 
     protected $table = 'vendors';
     protected $fillable = [
@@ -20,6 +20,8 @@ class Vendor extends Model
         'active',
         'logo',
         'password',
+        'latitude',
+        'longitude',
     ];
     protected $hidden = [
         'category_id',
@@ -42,19 +44,22 @@ class Vendor extends Model
         return ($val !== null) ? asset($val) : "";
 
     }
+
     public function setPasswordAttribute($password)
     {
-        if (!empty($password)){
-            $this->attributes['password']=bcrypt($password);
+        if (!empty($password)) {
+            $this->attributes['password'] = bcrypt($password);
         }
 
     }
 
     public function scopeSelection($query)
     {
-        return $query->select('id', 'name','address', 'mobile','active', 'category_id', 'logo');
+        return $query->select('id', 'name', 'address','longitude','latitude', 'mobile', 'active', 'category_id', 'logo');
     }
-    public function getActive(){
+
+    public function getActive()
+    {
         return $this->active == 1 ? 'مفعل ' : 'غير مفعل ';
     }
 }

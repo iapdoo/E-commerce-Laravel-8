@@ -40,8 +40,16 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('edit/{id}', [MainCategoryController::class, 'edit'])->name('admin.maincategories.edit');
         Route::post('update/{id}', [MainCategoryController::class, 'update'])->name('admin.maincategories.update');
         Route::get('delete/{id}', [MainCategoryController::class, 'destroy'])->name('admin.maincategories.delete');
+        Route::get('changeStatus/{id}', [MainCategoryController::class, 'changeStatus'])->name('admin.maincategories.status');
     });
     ######################### end Main Categories route ##############################
+
+    ######################### start subcategories route ##############################
+    Route::group(['prefix' => 'subcategories'], function () {
+        Route::get('/', [MainCategoryController::class, 'index'])->name('admin.subcategories');
+        Route::get('create', [MainCategoryController::class, 'create'])->name('admin.subcategories.create');
+        });
+    ######################### end subcategories route ##############################
 
     ######################### start Vendors route ##############################
     Route::group(['prefix' => 'vendors'], function () {
@@ -52,6 +60,8 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('edit/{id}', [VendorsController::class, 'edit'])->name('admin.vendors.edit');
         Route::post('update/{id}', [VendorsController::class, 'update'])->name('admin.vendors.update');
         Route::get('delete/{id}', [VendorsController::class, 'destroy'])->name('admin.vendors.delete');
+        Route::get('changeStatus/{id}', [VendorsController::class, 'changeStatus'])->name('admin.vendors.status');
+
     });
     ######################### end Vendors route ##############################
 

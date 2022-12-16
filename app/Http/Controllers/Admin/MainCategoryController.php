@@ -137,13 +137,31 @@ class MainCategoryController extends Controller
             if (isset($vendors) && $vendors->count() > 0) {
                 return redirect()->route('admin.maincategories')->with(['error' => 'لا يمكن حذف هذا القسم']);
             }
-            $deleteImage= Str::after($main_category->photo,'images/') ;
-            $deleteImage=base_path('public/images/'.$deleteImage);
-            unlink($deleteImage);
+            $deleteImage = Str::after($main_category->photo, 'images/');
+            $deleteImage = base_path('public/images/' . $deleteImage);
+            unlink($deleteImage); // delete photo
+            $main_category->categories()->delete();
             $main_category->delete();
-            return redirect()->route('admin.maincategories')->with(['error' => ' تم حذف القسم بنجاح ']);
+            return redirect()->route('admin.maincategories')->with(['success' => ' تم حذف القسم بنجاح ']);
         } catch (\Exception $exception) {
             return redirect()->route('admin.maincategories')->with(['error' => 'حدث خطا ما برجاء المحاوله لاحقا']);
         }
     }
+
+    public function changeStatus($main_category_id)
+    {
+        try {
+            $main_category = MainCategory::find($main_category_id);
+            if (!$main_category) {
+                return redirect()->route('admin.maincategories')->with(['error' => 'هذا المنتج غير موجود ']);
+            }
+            $status = $main_category->active == 0 ? 1 : 0;
+            $main_category->update(['active'=>$status]);
+            return redirect()->route('admin.maincategories')->with(['success' => 'تم التحديث بنجاح']);
+
+        } catch (\Exception $exception) {
+            return redirect()->route('admin.maincategories')->with(['error' => 'حدث خطا ما برجاء المحاوله لاحقا']);
+        }
+    }
+
 }
